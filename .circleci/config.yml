@@ -1,0 +1,28 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/app
+    docker:
+      - image: ubuntu
+    steps:
+      - checkout
+      - run:
+          name: Install curl
+          command: |
+            apt-get update
+            apt-get install -y curl
+      - run:
+          name: Install Minikube
+          command: |
+            curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.22.3/minikube-linux-amd64
+            chmod +x minikube
+            mv minikube /usr/local/bin/
+      - run:
+          name: Install Kubectl
+          command: |
+            curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.8.1/bin/linux/amd64/kubectl
+            chmod +x ./kubectl
+            mv ./kubectl /usr/local/bin/kubectl
+      - run: minikube version
+      - run: kubectl version --client
+
