@@ -12,6 +12,12 @@ jobs:
             apt-get update
             apt-get install -y curl
       - run:
+          name: Install deps for KVM driver
+          command: |
+            apt-get install -y libvirt-bin
+            curl -L https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.10.0/docker-machine-driver-kvm-ubuntu14.04 > /usr/local/bin/docker-machine-driver-kvm
+            chmod +x /usr/local/bin/docker-machine-driver-kvm
+      - run:
           name: Install Minikube
           command: |
             curl -Lo minikube https://storage.googleapis.com/minikube/releases/v0.22.3/minikube-linux-amd64
