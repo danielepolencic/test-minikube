@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/app
     docker:
-      - image: ubuntu
+      - image: teracy/ubuntu:16.04-dind-17.07.0-ce
     steps:
       - checkout
       - run:
@@ -11,12 +11,6 @@ jobs:
           command: |
             apt-get update
             apt-get install -y curl
-      - run:
-          name: Install deps for KVM driver
-          command: |
-            apt-get install -y libvirt-bin
-            curl -L https://github.com/dhiltgen/docker-machine-kvm/releases/download/v0.10.0/docker-machine-driver-kvm-ubuntu14.04 > /usr/local/bin/docker-machine-driver-kvm
-            chmod +x /usr/local/bin/docker-machine-driver-kvm
       - run:
           name: Install Minikube
           command: |
@@ -29,6 +23,6 @@ jobs:
             curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.8.1/bin/linux/amd64/kubectl
             chmod +x ./kubectl
             mv ./kubectl /usr/local/bin/kubectl
-      - run: minikube start --vm-driver kvm
+      - run: minikube start --vm-driver=none --extra-config=apiserver.InsecureServingOptions.BindAddress="127.0.0.1" --extra-config=apiserver.InsecureServingOptions.BindPort="8080"
       - run: kubectl version
 
